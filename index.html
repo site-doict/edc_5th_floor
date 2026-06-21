@@ -1173,7 +1173,7 @@ async function loadLatestSheetDraft() {
       frame.src = GOOGLE_SHEETS_WEB_APP_URL.trim() + '?action=latest&ts=' + Date.now();
       const timerId = setTimeout(() => {
         window.removeEventListener('message', onMessage);
-        reject(new Error('Timed out loading sheet data'));
+        reject(new Error('Google Sheets load endpoint is not responding. Redeploy the Apps Script web app with the latest doGet version.'));
       }, 15000);
     });
     if (!data || !data.ok || !data.hasData || !data.row) return;
@@ -1193,7 +1193,12 @@ async function loadLatestSheetDraft() {
 
     restoreFormSnapshot(data.row);
   } catch (e) {
-    // ignore network or CORS failures and continue with a blank form
+    const box = document.getElementById('saveStatus');
+    if (box && !box.innerHTML) {
+      box.style.display = 'block';
+      box.className = 'err';
+      box.innerHTML = '⚠️ <strong>Google Sheet data load failed.</strong> Redeploy the Apps Script web app with the latest doGet version, then refresh this page.';
+    }
   }
 }
 loadLatestSheetDraft();
