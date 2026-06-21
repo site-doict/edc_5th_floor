@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SET Centre Field Inspection Form</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #F7F8FA;
+    --surface: #FFFFFF;
+    --border: #DDE1E7;
+    --border-strong: #B0B8C1;
+    --accent: #1A5276;
+    --accent-light: #EAF1F8;
+    --accent-mid: #2E86C1;
+    --green: #1E8449;
+    --green-light: #E9F7EF;
+    --text-primary: #1A202C;
+    --text-secondary: #4A5568;
+    --text-muted: #718096;
+    --section-header: #0B3D6E;
+    --required: #C0392B;
+    --tag-bg: #EBF5FB;
+    --tag-border: #AED6F1;
+    --print-break: page-break-inside: avoid;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans Bengali', 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .wrapper {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* ── HEADER ── */
+  .form-header {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 10px 10px 0 0;
+    padding: 28px 32px 22px;
+    margin-bottom: 0;
+  }
+  .form-header .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    color: #E8F4FD;
+    font-size: 11px;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  .form-header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .form-header p {
+    font-size: 13px;
+    color: #BDD5E8;
+    line-height: 1.65;
+  }
+  .form-header .contact-note {
+    margin-top: 12px;
+    background: rgba(255,255,255,0.1);
+    border-left: 3px solid #5DADE2;
+    padding: 8px 12px;
+    font-size: 12.5px;
+    color: #D6EAF8;
+    border-radius: 0 4px 4px 0;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    page-break-inside: avoid;
+  }
+  .section:last-of-type { border-radius: 0 0 10px 10px; }
+
+  .section-header {
+    background: var(--section-header);
+    color: #fff;
+    padding: 13px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-header:hover { background: #0e4a85; }
+  .section-num {
+    background: rgba(255,255,255,0.18);
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+    font-family: 'Inter', sans-serif;
+  }
+  .section-title { font-size: 15px; font-weight: 600; flex: 1; }
+  .section-toggle { font-size: 18px; transition: transform .2s; }
+  .section-toggle.open { transform: rotate(180deg); }
+
+  .section-body { padding: 20px 24px 24px; }
+  .section-desc {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
+    border-radius: 5px;
+    padding: 8px 12px;
+    margin-bottom: 18px;
+    line-height: 1.6;
+  }
+
+  /* ── FIELD ── */
+  .field { margin-bottom: 18px; }
+  .field:last-child { margin-bottom: 0; }
+
+  label.field-label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  label.field-label .req { color: var(--required); margin-left: 3px; }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="tel"],
+  textarea,
+  select {
+    width: 100%;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 9px 12px;
+    font-family: inherit;
+    font-size: 13.5px;
+    color: var(--text-primary);
+    background: #FAFBFC;
+    transition: border-color .15s, box-shadow .15s;
+    outline: none;
+  }
+  input[type="text"]:focus,
+  input[type="date"]:focus,
+  input[type="tel"]:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--accent-mid);
+    box-shadow: 0 0 0 3px rgba(46,134,193,0.12);
+    background: #fff;
+  }
+  textarea { resize: vertical; min-height: 72px; }
+
+  /* ── CHECKLIST ITEM ── */
+  .checklist-item {
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .checklist-item:last-child { margin-bottom: 0; }
+
+  .checklist-q {
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 12px 14px 10px;
+    background: #F9FAFC;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.55;
+    color: var(--text-primary);
+  }
+  .checklist-q .req { color: var(--required); margin-left: 3px; }
+
+  .checklist-answer {
+    padding: 10px 14px 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .answer-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  input[type="text"].answer-text {
+    width: 100%;
+    margin-top: 4px;
+    padding: 7px 10px;
+    font-size: 13px;
+  }
+
+  /* Radio/checkbox pill style */
+  .pill-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill-label {
+    display: flex; align-items: center; gap: 7px;
+    background: #fff;
+    border: 2px solid var(--border-strong);
+    border-radius: 7px;
+    padding: 7px 16px;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all .12s;
+    user-select: none;
+    line-height: 1.3;
+  }
+  .pill-label:hover {
+    border-color: #888;
+    color: var(--text-primary);
+    background: #F0F0F0;
+  }
+  .pill-label input { display: none; }
+
+  /* হ্যাঁ — solid green */
+  .pill-label.yes-checked {
+    background: #1A7A3C;
+    border-color: #1A7A3C;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(26,122,60,0.35);
+  }
+  /* না — solid red */
+  .pill-label.no-checked {
+    background: #C0392B;
+    border-color: #C0392B;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(192,57,43,0.35);
+  }
+  /* আংশিক / নিশ্চিত নই / অন্যান্য — solid amber */
+  .pill-label.checked {
+    background: #B7770D;
+    border-color: #B7770D;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(183,119,13,0.35);
+  }
+
+  /* ── GRID ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 580px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* ── REMARK BOX ── */
+  .remark-box {
+    margin-top: 18px;
+    border-top: 1px dashed var(--border);
+    padding-top: 14px;
+  }
+  .remark-box label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* ── SUBMIT ── */
+  .submit-area {
+    padding: 28px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    text-align: center;
+  }
+  .cert-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    background: var(--accent-light);
+    border: 1px solid #AED6F1;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .btn-print {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 12px 36px;
+    font-size: 15px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+    margin: 0 8px;
+  }
+  .btn-print:hover { background: #0e4a85; }
+  .btn-save {
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 12px 36px;
+    font-size: 15px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+    margin: 0 8px;
+  }
+  .btn-save:hover { background: #166b3b; }
+  .btn-save:disabled { background: #8fb89e; cursor: not-allowed; }
+  #saveStatus {
+    max-width: 520px;
+    margin: 0 auto 18px;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    text-align: left;
+  }
+  #saveStatus.ok { background: var(--green-light); border: 1px solid #A9DFBF; color: #145A32; }
+  #saveStatus.err { background: #FDEDEC; border: 1px solid #F5B7B1; color: #922B21; }
+  .btn-reset {
+    background: #fff;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-strong);
+    border-radius: 7px;
+    padding: 12px 28px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    margin: 0 8px;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; }
+    .wrapper { padding: 0; }
+    .section-header { cursor: default; }
+    .btn-print, .btn-reset, .btn-save, #saveStatus, .draft-notice, #localSaveIndicator { display: none; }
+    .section-body { display: block !important; }
+    .checklist-item { break-inside: avoid; }
+  }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .progress-bar-bg {
+    flex: 1; background: var(--border); border-radius: 4px; height: 6px;
+  }
+  .progress-bar-fill {
+    height: 100%; background: var(--accent-mid); border-radius: 4px; transition: width .3s;
+    width: 0%;
+  }
+  .progress-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+  /* draft restore banner */
+  .draft-notice {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #FEF9E7;
+    border: 1px solid #F9E79F;
+    border-top: none;
+    padding: 12px 24px;
+    font-size: 13px;
+    color: #7D6608;
+  }
+  .draft-btn {
+    border: none;
+    border-radius: 5px;
+    padding: 7px 14px;
+    font-size: 12.5px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 6px;
+  }
+  .draft-btn.restore { background: var(--green); color: #fff; }
+  .draft-btn.discard { background: #fff; color: var(--text-secondary); border: 1px solid var(--border-strong); }
+
+  /* section divider inside body */
+  .sub-divider {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 16px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     NETLIFY FORM DETECTION (hidden, static)
+     Netlify scans the raw HTML at deploy time to register
+     this form. The real form on this page is built/filled by
+     JavaScript, then submitted to this same form name via fetch().
+     Do not remove or rename — "form-name" value must match the
+     name attribute below, and every field name used by the save
+     script must appear here once.
+════════════════════════════════════════ -->
+<form name="set-centre-inspection" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="set-centre-inspection" />
+  <input name="bot-field" />
+  <input name="submitted_at" />
+  <input name="completion_status" />
+  <input name="ap_name" /><input name="ap_id" /><input name="mobile" />
+  <input name="district" /><input name="upazila" /><input name="inspection_date" />
+  <input name="centre_name" /><input name="visit_type" />
+  <input name="overall_status" /><input name="usable" /><textarea name="overall_comment"></textarea>
+  <textarea name="civil_comment"></textarea>
+  <textarea name="elec_general_comment"></textarea>
+  <textarea name="elec_durable_comment"></textarea>
+  <textarea name="lightning_comment"></textarea>
+  <input name="solar_panel_brand" /><input name="solar_inverter_brand" /><textarea name="solar_comment"></textarea>
+  <input name="drive_civil" /><input name="drive_elec" /><input name="drive_solar" /><input name="drive_warranty" />
+  <input name="quality" /><input name="major_issues" /><input name="recommendation" />
+  <textarea name="issue_summary"></textarea>
+  <input name="elec_bill" /><input name="elec_bill_detail" /><textarea name="ap_remarks"></textarea>
+  <textarea name="civil_checklist_json"></textarea>
+  <textarea name="elec_general_checklist_json"></textarea>
+  <textarea name="elec_durable_checklist_json"></textarea>
+  <textarea name="lightning_checklist_json"></textarea>
+  <textarea name="solar_checklist_json"></textarea>
+</form>
+
+<div class="wrapper">
+
+<!-- HEADER -->
+<div class="form-header">
+  <div class="badge">EDC Project · Field Inspection</div>
+  <h1>উপজেলা SET Centre মাঠপর্যায় পরিদর্শন ফরম</h1>
+  <p>ডিজিটাল সংযোগ স্থাপন (EDC) প্রকল্পের আওতায় উপজেলা সেবা ও তথ্যপ্রযুক্তি প্রশিক্ষণ কেন্দ্রের Civil, Electrical ও Solar কাজের মাঠপর্যায়ের অবস্থা যাচাইয়ের জন্য এই ফরম। ফরমটি Assistant Programmer (AP) কর্তৃক দ্রুত পূরণের উপযোগী।</p>
+  <div class="contact-note">📌 প্রয়োজনে প্রজেক্ট অফিস বা অধিদপ্তরের অফিসারদের সাথে WhatsApp-এ যোগাযোগ করুন। সাবমিটের পরেও রেস্পন্স এডিট করা যাবে।</div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+  <span class="progress-label">অগ্রগতি</span>
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+  <span class="progress-label" id="progressText">0%</span>
+  <span class="progress-label" id="localSaveIndicator" style="color:#1E8449;"></span>
+</div>
+
+<!-- DRAFT RESTORE NOTICE -->
+<div id="draftNotice" class="draft-notice">
+  <span class="draft-msg"></span>
+  <span>
+    <button type="button" class="draft-btn restore" id="restoreDraftBtn">পুনরুদ্ধার করুন</button>
+    <button type="button" class="draft-btn discard" id="discardDraftBtn">না, নতুন শুরু করুন</button>
+  </span>
+</div>
+
+<!-- ════════════════════════════════════════
+     ক) মৌলিক তথ্য
+════════════════════════════════════════ -->
+<div class="section" id="sec1">
+  <div class="section-header" onclick="toggle('sec1')">
+    <div class="section-num">ক</div>
+    <div class="section-title">মৌলিক তথ্য — AP ও SET Centre পরিচিতি</div>
+    <div class="section-toggle open" id="toggle-sec1">▾</div>
+  </div>
+  <div class="section-body" id="body-sec1">
+    <div class="grid-2">
+      <div class="field">
+        <label class="field-label">Assistant Programmer (AP)-এর নাম <span class="req">*</span></label>
+        <input type="text" id="ap_name" placeholder="পূর্ণ নাম লিখুন">
+      </div>
+      <div class="field">
+        <label class="field-label">AP ID নম্বর</label>
+        <input type="text" id="ap_id" placeholder="ID নম্বর">
+      </div>
+      <div class="field">
+        <label class="field-label">মোবাইল নম্বর <span class="req">*</span></label>
+        <input type="tel" id="mobile" placeholder="01XXXXXXXXX">
+      </div>
+      <div class="field">
+        <label class="field-label">জেলা <span class="req">*</span></label>
+        <input type="text" id="district" placeholder="জেলার নাম">
+      </div>
+      <div class="field">
+        <label class="field-label">উপজেলা <span class="req">*</span></label>
+        <input type="text" id="upazila" placeholder="উপজেলার নাম">
+      </div>
+      <div class="field">
+        <label class="field-label">পরিদর্শনের তারিখ <span class="req">*</span></label>
+        <input type="date" id="inspection_date">
+      </div>
+    </div>
+    <div class="field" style="margin-top:4px;">
+      <label class="field-label">SET Centre / ভবনের নাম ও অবস্থান <span class="req">*</span></label>
+      <input type="text" id="centre_name" placeholder="ভবনের নাম ও পূর্ণ ঠিকানা">
+    </div>
+    <div class="field">
+      <label class="field-label">পরিদর্শনের ধরন <span class="req">*</span></label>
+      <div class="pill-group" id="visit-type">
+        <label class="pill-label"><input type="radio" name="visit_type" value="followup"> Follow-up পরিদর্শন</label>
+        <label class="pill-label"><input type="radio" name="visit_type" value="completion"> কাজ সমাপ্তি যাচাই</label>
+        <label class="pill-label"><input type="radio" name="visit_type" value="complaint"> সমস্যা/অভিযোগ যাচাই</label>
+        <label class="pill-label"><input type="radio" name="visit_type" value="other"> অন্যান্য</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     খ) সার্বিক অগ্রগতি
+════════════════════════════════════════ -->
+<div class="section" id="sec2">
+  <div class="section-header" onclick="toggle('sec2')">
+    <div class="section-num">খ</div>
+    <div class="section-title">সার্বিক অগ্রগতি</div>
+    <div class="section-toggle open" id="toggle-sec2">▾</div>
+  </div>
+  <div class="section-body" id="body-sec2">
+    <div class="section-desc">Civil, Electrical ও Solar কাজের সামগ্রিক অগ্রগতি দিন।</div>
+    <div class="field">
+      <label class="field-label">SET Centre-এর সামগ্রিক কাজের অবস্থা <span class="req">*</span></label>
+      <div class="pill-group">
+        <label class="pill-label"><input type="radio" name="overall_status" value="কাজ শুরু হয়নি"> কাজ শুরু হয়নি</label>
+        <label class="pill-label"><input type="radio" name="overall_status" value="কাজ চলমান"> কাজ চলমান</label>
+        <label class="pill-label"><input type="radio" name="overall_status" value="প্রায় সমাপ্ত"> প্রায় সমাপ্ত</label>
+        <label class="pill-label"><input type="radio" name="overall_status" value="সমাপ্ত কিন্তু ত্রুটি আছে"> সমাপ্ত কিন্তু ত্রুটি আছে</label>
+        <label class="pill-label"><input type="radio" name="overall_status" value="সমাপ্ত ও ব্যবহারযোগ্য"> সমাপ্ত ও ব্যবহারযোগ্য</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">বর্তমানে Centre ব্যবহারযোগ্য কি না? <span class="req">*</span></label>
+      <div class="pill-group">
+        <label class="pill-label"><input type="radio" name="usable" value="হ্যাঁ, ব্যবহারযোগ্য"> হ্যাঁ, ব্যবহারযোগ্য</label>
+        <label class="pill-label"><input type="radio" name="usable" value="আংশিক ব্যবহারযোগ্য"> আংশিক ব্যবহারযোগ্য</label>
+        <label class="pill-label"><input type="radio" name="usable" value="না, ব্যবহারযোগ্য নয়"> না, ব্যবহারযোগ্য নয়</label>
+        <label class="pill-label"><input type="radio" name="usable" value="নিশ্চিত নই"> নিশ্চিত নই</label>
+      </div>
+    </div>
+    <div class="remark-box">
+      <label>সার্বিক অগ্রগতির মন্তব্য</label>
+      <textarea id="overall_comment" placeholder="এখানে লিখুন…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     গ) Civil কাজের চেকলিস্ট
+════════════════════════════════════════ -->
+<div class="section" id="sec3">
+  <div class="section-header" onclick="toggle('sec3')">
+    <div class="section-num">গ</div>
+    <div class="section-title">Civil / পূর্ত কাজের চেকলিস্ট</div>
+    <div class="section-toggle open" id="toggle-sec3">▾</div>
+  </div>
+  <div class="section-body" id="body-sec3">
+    <div class="section-desc">ভবন, দরজা-জানালা, টয়লেট, সিলিং, পার্টিশন, ছাদ, পানি, ইন্টেরিয়র ইত্যাদি যাচাই করুন।</div>
+
+    <!-- Civil checklist items -->
+    <div id="civil-items"></div>
+
+    <div class="remark-box">
+      <label>Civil কাজের প্রধান ত্রুটি / অসম্পূর্ণ কাজ / AP মন্তব্য</label>
+      <textarea id="civil_comment" placeholder="যদি কোনো ত্রুটি বা অসম্পূর্ণ কাজ থাকে তা এখানে লিখুন…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ঘ) Electrical সাধারণ চেকলিস্ট
+════════════════════════════════════════ -->
+<div class="section" id="sec4">
+  <div class="section-header" onclick="toggle('sec4')">
+    <div class="section-num">ঘ</div>
+    <div class="section-title">Electrical কাজের সাধারণ চেকলিস্ট</div>
+    <div class="section-toggle open" id="toggle-sec4">▾</div>
+  </div>
+  <div class="section-body" id="body-sec4">
+    <div class="section-desc">PVC pipe, gang box, light/fan/switch/socket/DB/wire/circuit breaker ইত্যাদি যাচাই করুন।</div>
+    <div id="elec-general-items"></div>
+    <div class="remark-box">
+      <label>Electrical সাধারণ কাজের মন্তব্য</label>
+      <textarea id="elec_general_comment" placeholder="এখানে লিখুন…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ঙ) Electrical টেকসই চেকলিস্ট
+════════════════════════════════════════ -->
+<div class="section" id="sec5">
+  <div class="section-header" onclick="toggle('sec5')">
+    <div class="section-num">ঙ</div>
+    <div class="section-title">Electrical — টেকসই / দীর্ঘস্থায়িত্বের জন্য অত্যাবশ্যকীয়</div>
+    <div class="section-toggle open" id="toggle-sec5">▾</div>
+  </div>
+  <div class="section-body" id="body-sec5">
+    <div class="section-desc">Cable size, earthing, breaker, busbar, color code এবং load balancing যাচাই করুন।</div>
+    <div id="elec-durable-items"></div>
+    <div class="remark-box">
+      <label>Electrical টেকসই/দীর্ঘস্থায়িত্ব সংক্রান্ত মন্তব্য</label>
+      <textarea id="elec_durable_comment" placeholder="এখানে লিখুন…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     চ) বজ্র নিরোধক
+════════════════════════════════════════ -->
+<div class="section" id="sec6">
+  <div class="section-header" onclick="toggle('sec6')">
+    <div class="section-num">চ</div>
+    <div class="section-title">বজ্র নিরোধক / Lightning Protection</div>
+    <div class="section-toggle open" id="toggle-sec6">▾</div>
+  </div>
+  <div class="section-body" id="body-sec6">
+    <div class="section-desc">Lightning arrester, copper conductor, earthing pit ও resistance যাচাই করুন।</div>
+    <div id="lightning-items"></div>
+    <div class="remark-box">
+      <label>বজ্র নিরোধক সংক্রান্ত মন্তব্য</label>
+      <textarea id="lightning_comment" placeholder="এখানে লিখুন…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ছ) Solar চেকলিস্ট
+════════════════════════════════════════ -->
+<div class="section" id="sec7">
+  <div class="section-header" onclick="toggle('sec7')">
+    <div class="section-num">ছ</div>
+    <div class="section-title">Solar / সৌর বিদ্যুৎ কাজের চেকলিস্ট</div>
+    <div class="section-toggle open" id="toggle-sec7">▾</div>
+  </div>
+  <div class="section-body" id="body-sec7">
+    <div class="section-desc">Solar panel, inverter, warranty, cable, breaker, earthing, net meter ও monitoring যাচাই করুন।</div>
+    <div id="solar-items"></div>
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="field">
+        <label class="field-label">Solar panel brand / model</label>
+        <input type="text" id="solar_panel_brand" placeholder="Brand ও Model লিখুন">
+      </div>
+      <div class="field">
+        <label class="field-label">Solar inverter brand / model</label>
+        <input type="text" id="solar_inverter_brand" placeholder="Brand ও Model লিখুন">
+      </div>
+    </div>
+    <div class="remark-box">
+      <label>Solar কাজের প্রধান ত্রুটি / অসম্পূর্ণ কাজ / AP মন্তব্য</label>
+      <textarea id="solar_comment" placeholder="এখানে লিখুন…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     জ) ছবি / ডকুমেন্ট লিংক
+════════════════════════════════════════ -->
+<div class="section" id="sec8">
+  <div class="section-header" onclick="toggle('sec8')">
+    <div class="section-num">জ</div>
+    <div class="section-title">ছবি / প্রমাণ / ডকুমেন্ট লিংক</div>
+    <div class="section-toggle open" id="toggle-sec8">▾</div>
+  </div>
+  <div class="section-body" id="body-sec8">
+    <div class="section-desc">ছবি Google Drive-এ আপলোড করে link দিন। Access যেন <strong>"Anyone with the link can view"</strong> থাকে।</div>
+    <div class="field">
+      <label class="field-label">Civil কাজের ছবির Drive link</label>
+      <input type="text" id="drive_civil" placeholder="https://drive.google.com/…">
+    </div>
+    <div class="field">
+      <label class="field-label">Electrical DB / wiring / earthing / breaker ছবির Drive link</label>
+      <input type="text" id="drive_elec" placeholder="https://drive.google.com/…">
+    </div>
+    <div class="field">
+      <label class="field-label">Solar panel / inverter / net meter / earthing ছবির Drive link</label>
+      <input type="text" id="drive_solar" placeholder="https://drive.google.com/…">
+    </div>
+    <div class="field">
+      <label class="field-label">Warranty certificate / authorization letter / material approval document-এর Drive link</label>
+      <input type="text" id="drive_warranty" placeholder="https://drive.google.com/…">
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ঝ) AP পর্যবেক্ষণ ও সুপারিশ
+════════════════════════════════════════ -->
+<div class="section" id="sec9">
+  <div class="section-header" onclick="toggle('sec9')">
+    <div class="section-num">ঝ</div>
+    <div class="section-title">AP পর্যবেক্ষণ, ঝুঁকি ও সুপারিশ</div>
+    <div class="section-toggle open" id="toggle-sec9">▾</div>
+  </div>
+  <div class="section-body" id="body-sec9">
+    <div class="section-desc">এ অংশটি সিদ্ধান্ত গ্রহণের জন্য গুরুত্বপূর্ণ। সংক্ষিপ্ত কিন্তু স্পষ্টভাবে লিখুন।</div>
+
+    <div class="field">
+      <label class="field-label">AP-এর মূল্যায়ন অনুযায়ী Centre-এর কাজের মান <span class="req">*</span></label>
+      <div class="pill-group">
+        <label class="pill-label"><input type="radio" name="quality" value="ভালো"> ভালো</label>
+        <label class="pill-label"><input type="radio" name="quality" value="মোটামুটি"> মোটামুটি</label>
+        <label class="pill-label"><input type="radio" name="quality" value="দুর্বল"> দুর্বল</label>
+        <label class="pill-label"><input type="radio" name="quality" value="গুরুতর ত্রুটি আছে"> গুরুতর ত্রুটি আছে</label>
+        <label class="pill-label"><input type="radio" name="quality" value="পরিদর্শন অসম্পূর্ণ"> পরিদর্শন অসম্পূর্ণ</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">কোন কোন অংশে গুরুতর সমস্যা আছে? <span class="req">*</span></label>
+      <div class="pill-group">
+        <label class="pill-label"><input type="checkbox" name="major_issues" value="Civil কাজ"> Civil কাজ</label>
+        <label class="pill-label"><input type="checkbox" name="major_issues" value="Electrical কাজ"> Electrical কাজ</label>
+        <label class="pill-label"><input type="checkbox" name="major_issues" value="Solar কাজ"> Solar কাজ</label>
+        <label class="pill-label"><input type="checkbox" name="major_issues" value="Earthing / Safety"> Earthing / Safety</label>
+        <label class="pill-label"><input type="checkbox" name="major_issues" value="Lightning protection"> Lightning protection</label>
+        <label class="pill-label"><input type="checkbox" name="major_issues" value="Net meter / monitoring"> Net meter / monitoring</label>
+        <label class="pill-label"><input type="checkbox" name="major_issues" value="Material quality / brand mismatch"> Material quality / brand mismatch</label>
+        <label class="pill-label"><input type="checkbox" name="major_issues" value="Warranty / authorization document নেই"> Warranty / authorization document নেই</label>
+        <label class="pill-label"><input type="checkbox" name="major_issues" value="কাজ অসম্পূর্ণ"> কাজ অসম্পূর্ণ</label>
+        <label class="pill-label"><input type="checkbox" name="major_issues" value="গুরুতর সমস্যা নেই"> গুরুতর সমস্যা নেই</label>
+        <label class="pill-label"><input type="checkbox" name="major_issues" value="অন্যান্য"> অন্যান্য</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">AP-এর সুপারিশ <span class="req">*</span></label>
+      <div class="pill-group">
+        <label class="pill-label"><input type="radio" name="recommendation" value="কাজ গ্রহণযোগ্য"> কাজ গ্রহণযোগ্য</label>
+        <label class="pill-label"><input type="radio" name="recommendation" value="Minor correction সাপেক্ষে গ্রহণযোগ্য"> Minor correction সাপেক্ষে গ্রহণযোগ্য</label>
+        <label class="pill-label"><input type="radio" name="recommendation" value="Correction ছাড়া গ্রহণযোগ্য নয়"> Correction ছাড়া গ্রহণযোগ্য নয়</label>
+        <label class="pill-label"><input type="radio" name="recommendation" value="পুনরায় পরিদর্শন প্রয়োজন"> পুনরায় পরিদর্শন প্রয়োজন</label>
+        <label class="pill-label"><input type="radio" name="recommendation" value="উর্ধ্বতন কর্তৃপক্ষের জরুরি হস্তক্ষেপ প্রয়োজন"> উর্ধ্বতন কর্তৃপক্ষের জরুরি হস্তক্ষেপ প্রয়োজন</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">প্রধান সমস্যা / ত্রুটির সংক্ষিপ্ত তালিকা <span class="req">*</span></label>
+      <textarea id="issue_summary" placeholder="বুলেট আকারে সংক্ষিপ্ত তালিকা লিখুন…" style="min-height:90px;"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">বিদ্যুৎ বিল বকেয়া আছে কি না? <span style="font-size:12px;color:var(--text-muted);">(চালু কেন্দ্রের জন্য প্রযোজ্য)</span></label>
+      <div class="pill-group" style="margin-bottom:8px;">
+        <label class="pill-label"><input type="radio" name="elec_bill" value="না, বকেয়া নেই"> না, বকেয়া নেই</label>
+        <label class="pill-label"><input type="radio" name="elec_bill" value="হ্যাঁ, বকেয়া আছে"> হ্যাঁ, বকেয়া আছে</label>
+      </div>
+      <input type="text" id="elec_bill_detail" placeholder="বকেয়া থাকলে: কয় মাস ও মোট পরিমাণ (টাকা) লিখুন">
+    </div>
+
+    <div class="remark-box">
+      <label>AP-এর বিস্তারিত মন্তব্য ও সুপারিশ <span class="req">*</span></label>
+      <textarea id="ap_remarks" style="min-height:100px;" placeholder="বিস্তারিত পর্যবেক্ষণ ও সুপারিশ লিখুন…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- SUBMIT -->
+<div class="submit-area">
+  <div class="cert-text">
+    <strong>সহকারী প্রোগ্রামারের প্রত্যয়ন:</strong> আমি প্রত্যয়ন করছি যে, আমার জানা মতে উপরের তথ্য মাঠপর্যায়ের যাচাইয়ের ভিত্তিতে প্রদান করা হয়েছে।
+  </div>
+  <div id="saveStatus" style="display:none;"></div>
+  <button class="btn-save" id="saveBtn" onclick="saveForm()">💾 Save / সংরক্ষণ করুন</button>
+  <button class="btn-print" onclick="window.print()">🖨️ Print / PDF সংরক্ষণ</button>
+  <button class="btn-reset" onclick="if(confirm('সকল তথ্য মুছে ফেলবেন? (ডিভাইসে সংরক্ষিত Draft-ও মুছে যাবে)')) { localStorage.removeItem('setCentreInspectionDraft_v1'); location.reload(); }">রিসেট</button>
+</div>
+
+</div><!-- /wrapper -->
+
+<script>
+// ── Toggle sections ──
+function toggle(id) {
+  const body = document.getElementById('body-' + id);
+  const t = document.getElementById('toggle-' + id);
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : '';
+  t.classList.toggle('open', !open);
+}
+
+// ── Pill interactive ──
+document.addEventListener('change', function(e) {
+  const inp = e.target;
+  if (inp.type === 'radio') {
+    const name = inp.name;
+    document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+      const lbl = r.closest('.pill-label');
+      if (lbl) { lbl.classList.remove('checked', 'yes-checked', 'no-checked'); }
+    });
+    const lbl = inp.closest('.pill-label');
+    if (lbl) {
+      const val = (inp.value || lbl.textContent).trim();
+      if (val.startsWith('হ্যাঁ')) lbl.classList.add('yes-checked');
+      else if (val.startsWith('না')) lbl.classList.add('no-checked');
+      else lbl.classList.add('checked');
+    }
+  }
+  if (inp.type === 'checkbox') {
+    const lbl = inp.closest('.pill-label');
+    if (lbl) lbl.classList.toggle('checked', inp.checked);
+  }
+  updateProgress();
+  autoSaveLocal();
+});
+
+// ── Checklist data ──
+const civilItems = [
+  { q: '৫ম তলার সিঁড়ি সম্মুখের উপরের বীমে SS দ্বারা "উপজেলা সেবা ও তথ্যপ্রযুক্তি প্রশিক্ষণ কেন্দ্র" নামফলক লেখা আছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Thai Frame, Glass lock এবং চাকা ঠিকমতো কাজ করে কি না?', opts: ['হ্যাঁ','না','আংশিক'] },
+  { q: 'Toilet-এর সকল দরজা এবং cat door-এর চৌকাঠ ও পাল্লা চিটাগং টিক / সেগুন কাঠ দ্বারা তৈরি কি না?', opts: ['হ্যাঁ','না','আংশিক'] },
+  { q: 'জানালার গ্রিল Square bar এবং সকল রুমের দরজাগুলো Thai Swing door কি না?', opts: ['হ্যাঁ','না','আংশিক'] },
+  { q: 'কমন Toilet পিছনের Thai Glass এবং বারান্দা/অফিসার রুম/Plug & Play Room পর্যন্ত Thai Glass-এ Frosted Paper লাগানো হয়েছে কি না?', opts: ['হ্যাঁ','না','আংশিক'] },
+  { q: 'ভবনের ভিতরে ৫ম তলার সকল wall-এর রং করা হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'ভবনের বাহিরের চারদিকের সব wall-এর রং করা হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Lab-2 এবং Plug & Play Zone-এর সিলিং চারকোল গ্রে / গ্রে রং করা আছে কি না?', opts: ['হ্যাঁ','না','আংশিক'] },
+  { q: 'সকল Toilet-এর কাজ ডিজাইন মোতাবেক মেঝে হতে নির্ধারিত উচ্চতা পর্যন্ত টাইলস করা হয়েছে কি না?', opts: ['হ্যাঁ','না','আংশিক'] },
+  { q: 'Fixed Partition এবং Folding Partition drawing/specification অনুযায়ী করা হয়েছে কি না?', opts: ['হ্যাঁ','না','আংশিক','নিশ্চিত নই'] },
+  { q: 'Folding Partition-এর উপরের ও নিচের অংশে SS channel করা আছে কি না?', opts: ['হ্যাঁ','না','আংশিক'] },
+  { q: 'Plug & Play Room-এ বসার slab গ্রানাইট পাথর দ্বারা আচ্ছাদিত কি না?', opts: ['হ্যাঁ','না','আংশিক','প্রযোজ্য নয়'] },
+  { q: 'Collapsible gate ও railing-এর কাজ ডিজাইন মোতাবেক SS দ্বারা করা আছে কি না?', opts: ['হ্যাঁ','না','আংশিক','নিশ্চিত নই'] },
+  { q: 'ছাদে rooftop concrete-এর slope ঠিক আছে কি না?', opts: ['হ্যাঁ','না','আংশিক','নিশ্চিত নই'] },
+  { q: 'ছাদে ৪টি duct ইটের গাঁথুনি ও slab দ্বারা বন্ধ করা আছে কি না?', opts: ['হ্যাঁ','না','আংশিক'] },
+  { q: '১০০০ লিটারের ২টি নতুন পানির ট্যাংক চিলেকোঠার ছাদে বসানো হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'ছাদের সকল pipe, socket ও gate valve UPVC-এর কি না?', opts: ['হ্যাঁ','না','আংশিক','নিশ্চিত নই'] },
+  { q: 'Lab-1 room, switch room, NOC room এবং common toilet zone-এ gypsum সিলিং আছে কি না?', opts: ['হ্যাঁ','না','আংশিক','নিশ্চিত নই'] },
+  { q: 'Lab-2 room-এর column teak veneered board দিয়ে মোড়ানো আছে কি না?', opts: ['হ্যাঁ','না','আংশিক','নিশ্চিত নই'] },
+  { q: 'Lab-1-এর দরজার পাশের wall skirting থেকে teak veneered board দিয়ে cladding করা আছে কি না?', opts: ['হ্যাঁ','না','আংশিক','নিশ্চিত নই'] },
+  { q: 'Tea corner স্থাপন করা এবং steel sink লাগানো হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Toilet-এ ventilation ব্যবস্থা ঠিক আছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Toilet fittings ঠিকমতো কাজ করে কি না?', opts: ['হ্যাঁ','না','আংশিক'] },
+  { q: 'সিঁড়ির দুইদিকে খোলা ছাদ থাকলে সেখানে যাওয়ার ব্যবস্থা করা হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'সিঁড়ির দুইদিকে খোলা ছাদে পানি জমে থাকে কি না এবং বাইরের দিকে railing দেওয়া হয়েছে কি না?', opts: ['হ্যাঁ','না','আংশিক'] },
+  { q: 'ডিজাইন অনুযায়ী interior-এর কাজ করা হয়েছে কি না?', opts: ['হ্যাঁ','না','আংশিক','নিশ্চিত নই'] },
+];
+
+const elecGeneralItems = [
+  { q: 'ছাদে এবং দেয়ালের ভিতর ২ মিমি পুরুত্বের PVC pipe লাগানো হয়েছে কি না এবং water grade কি না?', opts: ['হ্যাঁ','না','আংশিক','নিশ্চিত নই'] },
+  { q: 'Steel gang box ১৮ gauge-এর কি না এবং wall flush করে লাগানো কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Design অনুযায়ী নির্দিষ্ট স্থানে সকল light point, fan, switch board, SDB power point স্থাপন করা হয়েছে কি না?', opts: ['হ্যাঁ','না','আংশিক','নিশ্চিত নই'] },
+  { q: 'Ceiling fan 65W energy saving কি না এবং ceiling rose-এর cable ampere tube-এর মধ্যে দিয়ে টানা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Switch/socket ABB/Legrand/Schneider বা approved equivalent কি না এবং importer-এর কাছ থেকে সংগ্রহ করা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'SDB ও MDB ABB/Indoasian/SuperStar বা approved equivalent কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Wire BRB/Poly/BBS/PARTEX/MEP বা schedule-mentioned brand কি না এবং মূল উৎপাদনকারী/authorized source থেকে সংগ্রহ করা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'দেয়ালে pipe fitting-এর সময় machine দিয়ে groove cutting করা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'SDB ও MDB-এর circuit breaker diagram অনুসারে স্থাপন হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Casting-এর সময় pipe-গুলো ভালোভাবে বাঁধা হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+];
+
+const elecDurableItems = [
+  { q: 'প্রতিটি light ও fan point-এ আলাদাভাবে phase, neutral ও earthing সহ ৩টি ১.৫ RM BYA wire টানা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Switch board circuit এবং power point circuit-এ SDB থেকে সরাসরি ৩টি ২.৫ RM BYA wire টানা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'SDB-AC / Shop DB connection-এ circuit diagram অনুসারে ৩টি ৪ RM BYA wire টানা হয়েছে কি না?', opts: ['হ্যাঁ','না','আংশিক','প্রযোজ্য নয়'] },
+  { q: 'MDB-SDB connection-এ circuit diagram অনুসারে ৪টি ১০ RM NYY wire টানা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'MDB-SDB connection-এর জন্য ১০ RM সবুজ রঙের BYA earthing wire টানা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Net meter-MDB connection-এ circuit diagram অনুসারে ৪টি ১৬ RM NYY wire টানা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Net meter-MDB connection-এর জন্য ১৬ RM সবুজ রঙের BYA earthing wire টানা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Earthing wire-গুলো circuit diagram অনুসারে যথাযথভাবে সংযোগ দেওয়া হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Switch board circuit-এর জন্য SDB-তে ১০ amp circuit breaker লাগানো হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Power circuit-এর জন্য SDB-তে ১৬ amp circuit breaker লাগানো হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'AC power-এর জন্য SDB-তে ৩২ amp SP circuit breaker লাগানো হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'SDB 100A TPN+E compact type copper busbar-এর main হিসেবে 50/63 amp TP circuit breaker লাগানো হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'MDB 300A TPN+E compact type copper busbar-এর main হিসেবে 80/100/125 amp TP circuit breaker লাগানো হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Circuit breaker ABB/Legrand/Schneider বা approved equivalent কি না এবং authorized importer/source থেকে সংগ্রহ করা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Main earthing works 120 ft GI pipe এবং 2x2 SWG HDBC copper wire দ্বারা করা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Main earthing resistance 1 ohm-এর কম আছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'MDB/SDB-তে cable connection-এর জন্য cable lugs ব্যবহার করা হয়েছে কি না?', opts: ['হ্যাঁ','না','আংশিক','নিশ্চিত নই'] },
+  { q: 'Light/fan cable connection-এর জন্য plastic connector ব্যবহার করা হয়েছে কি না?', opts: ['হ্যাঁ','না','আংশিক'] },
+  { q: 'Color code অনুসরণ করা হয়েছে কি না? Phase-red, neutral-black, earthing-green/bi-color.', opts: ['হ্যাঁ','না','আংশিক'] },
+  { q: 'Phase wire switch ও breaker-এর মাধ্যমে দেওয়া হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'কাজ শেষে three-phase load balancing করা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'সকল wiring এবং electrical কাজ drawing/design মোতাবেক করা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Electrical material ব্যবহারের পূর্বে অনুমোদন নেওয়া হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+];
+
+const lightningItems = [
+  { q: 'বজ্র নিরোধক দণ্ড solid copper, 457 mm length ও 25.4 mm dia-এর কি না এবং authorized source থেকে সংগ্রহ করা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'বজ্র নিরোধকগুলো নির্দেশিকা অনুযায়ী 12.7 mm dia copper wire দিয়ে পরস্পর সংযুক্ত কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Copper wire PVC pipe-এর মধ্যে দিয়ে নেওয়া হয়েছে কি না এবং parapet wall concealed করা হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Lightning earthing works 20 ft GI pipe এবং 12.7 mm dia copper wire দিয়ে করা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Copper wire বজ্র নিরোধকের সাথে সংযুক্ত করা হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'ভবন earthing pit এবং বজ্র নিরোধক earthing pit পৃথক করা হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'দুই earthing pit-এর মধ্যবর্তী দূরত্ব ন্যূনতম ২০ ft রাখা হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'বজ্র নিরোধক দণ্ড ১০ ft ২ inch GI pipe-এর উপর drawing অনুসারে বসানো হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Test pit বসানো হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Down conductor size 12.7 mm dia কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Lightning earthing resistance 10 ohm-এর কম আছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+];
+
+const solarItems = [
+  { q: 'Solar panel ICT-approved specification/schedule-mentioned brand বা SREDA-approved equivalent কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Solar panel মূল importer/authorized source থেকে সংগ্রহ করা হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Inverter ICT-approved specification/schedule-mentioned brand বা SREDA-approved equivalent কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Inverter মূল importer/authorized source থেকে সংগ্রহ করা হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Solar panel-এর ১২ বছরের warranty certificate জমা দেওয়া হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Solar panel manufacturer authorization letter জমা দেওয়া হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Solar inverter-এর ৫ বছরের warranty certificate জমা দেওয়া হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Solar inverter manufacturer authorization letter জমা দেওয়া হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Inverter remote monitoring এবং central monitoring ব্যবস্থা আছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Remote/central monitoring কার্যকরভাবে কাজ করছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'PV panel to inverter DC cable minimum 4 RM, 1.5KV আছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Inverter to MDB cable schedule অনুযায়ী আছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: 'Solar system-এ DC circuit breaker 1000V, 20A-32A আছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Solar system-এ AC circuit breaker 20A-32A TP MCB আছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Mounting structure hot-dip galvanized এবং galvanized/SS nut-bolt সহ স্থাপন করা হয়েছে কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+  { q: '3-phase energy meter লাগানো হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Solar panel body earthing করা হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Inverter body earthing করা হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Net meter স্থাপন করা হয়েছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Net meter operational কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Inverter manufacturer-এর নিজস্ব স্থানীয় service ব্যবস্থা আছে কি না?', opts: ['হ্যাঁ','না'] },
+  { q: 'Solar work single line diagram অনুযায়ী স্থাপিত কি না?', opts: ['হ্যাঁ','না','নিশ্চিত নই'] },
+];
+
+let itemCount = 0;
+function buildChecklist(items, containerId) {
+  const el = document.getElementById(containerId);
+  items.forEach((item, i) => {
+    const id = 'ci_' + (++itemCount);
+    const pills = item.opts.map((o, j) =>
+      `<label class="pill-label" id="lbl_${id}_${j}">
+        <input type="radio" name="${id}" value="${o}"> ${o}
+      </label>`
+    ).join('');
+    el.innerHTML += `
+      <div class="checklist-item">
+        <div class="checklist-q">${i+1}. ${item.q} <span class="req">*</span></div>
+        <div class="checklist-answer">
+          <div class="pill-group">${pills}</div>
+        </div>
+      </div>`;
+  });
+}
+
+buildChecklist(civilItems, 'civil-items');
+buildChecklist(elecGeneralItems, 'elec-general-items');
+buildChecklist(elecDurableItems, 'elec-durable-items');
+buildChecklist(lightningItems, 'lightning-items');
+buildChecklist(solarItems, 'solar-items');
+
+// ── Progress ──
+function updateProgress() {
+  const total = document.querySelectorAll('.checklist-item').length;
+  const done = new Set();
+  document.querySelectorAll('.checklist-item input[type="radio"]:checked').forEach(r => {
+    done.add(r.name);
+  });
+  const pct = Math.round((done.size / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').innerText = pct + '% (' + done.size + '/' + total + ')';
+}
+updateProgress();
+
+// ── Save to Netlify Forms ──
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+function radioVal(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : '';
+}
+function checkedList(name) {
+  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
+    .map(i => i.value).join(', ');
+}
+function collectChecklistAnswers(items, containerId) {
+  const container = document.getElementById(containerId);
+  const itemEls = container.querySelectorAll('.checklist-item');
+  const result = [];
+  itemEls.forEach((el, i) => {
+    const checked = el.querySelector('input[type="radio"]:checked');
+    result.push({ q: items[i].q, a: checked ? checked.value : '' });
+  });
+  return result;
+}
+
+const REQUIRED_FIELDS = [
+  { id: 'ap_name', label: 'Assistant Programmer (AP)-এর নাম' },
+  { id: 'mobile', label: 'মোবাইল নম্বর' },
+  { id: 'district', label: 'জেলা' },
+  { id: 'upazila', label: 'উপজেলা' },
+  { id: 'inspection_date', label: 'পরিদর্শনের তারিখ' },
+  { id: 'centre_name', label: 'SET Centre / ভবনের নাম' }
+];
+function getMissingRequired() {
+  const missing = REQUIRED_FIELDS.filter(r => !val(r.id)).map(r => r.label);
+  if (!radioVal('visit_type')) missing.push('পরিদর্শনের ধরন');
+  return missing;
+}
+
+// ── Local draft autosave (works instantly, offline, no internet needed) ──
+const DRAFT_KEY = 'setCentreInspectionDraft_v1';
+
+function collectFormSnapshot() {
+  return {
+    ap_name: val('ap_name'), ap_id: val('ap_id'), mobile: val('mobile'),
+    district: val('district'), upazila: val('upazila'), inspection_date: val('inspection_date'),
+    centre_name: val('centre_name'), visit_type: radioVal('visit_type'),
+    overall_status: radioVal('overall_status'), usable: radioVal('usable'),
+    overall_comment: val('overall_comment'), civil_comment: val('civil_comment'),
+    elec_general_comment: val('elec_general_comment'), elec_durable_comment: val('elec_durable_comment'),
+    lightning_comment: val('lightning_comment'), solar_panel_brand: val('solar_panel_brand'),
+    solar_inverter_brand: val('solar_inverter_brand'), solar_comment: val('solar_comment'),
+    drive_civil: val('drive_civil'), drive_elec: val('drive_elec'), drive_solar: val('drive_solar'),
+    drive_warranty: val('drive_warranty'), quality: radioVal('quality'),
+    major_issues: Array.from(document.querySelectorAll('input[name="major_issues"]:checked')).map(i => i.value),
+    recommendation: radioVal('recommendation'), issue_summary: val('issue_summary'),
+    elec_bill: radioVal('elec_bill'), elec_bill_detail: val('elec_bill_detail'), ap_remarks: val('ap_remarks'),
+    civil: collectChecklistAnswers(civilItems, 'civil-items'),
+    elecGeneral: collectChecklistAnswers(elecGeneralItems, 'elec-general-items'),
+    elecDurable: collectChecklistAnswers(elecDurableItems, 'elec-durable-items'),
+    lightning: collectChecklistAnswers(lightningItems, 'lightning-items'),
+    solar: collectChecklistAnswers(solarItems, 'solar-items')
+  };
+}
+
+function autoSaveLocal() {
+  try {
+    const snap = { savedAt: Date.now(), data: collectFormSnapshot() };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(snap));
+    const ind = document.getElementById('localSaveIndicator');
+    if (ind) {
+      const t = new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
+      ind.textContent = '💾 ডিভাইসে সংরক্ষিত: ' + t;
+    }
+  } catch (e) {
+    // localStorage unavailable (e.g. private browsing) — local autosave skipped silently
+  }
+}
+
+function setRadioByValue(name, value) {
+  if (!value) return;
+  document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+    if (r.value === value) {
+      r.checked = true;
+      r.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  });
+}
+function setCheckboxesByValues(name, values) {
+  if (!values || !values.length) return;
+  document.querySelectorAll(`input[name="${name}"]`).forEach(c => {
+    if (values.includes(c.value)) {
+      c.checked = true;
+      c.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  });
+}
+function restoreChecklistAnswers(saved, containerId) {
+  if (!saved) return;
+  const container = document.getElementById(containerId);
+  const itemEls = container.querySelectorAll('.checklist-item');
+  itemEls.forEach((el, i) => {
+    const a = saved[i] && saved[i].a;
+    if (!a) return;
+    el.querySelectorAll('input[type="radio"]').forEach(r => {
+      if (r.value === a) {
+        r.checked = true;
+        r.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+  });
+}
+function restoreFormSnapshot(data) {
+  if (!data) return;
+  ['ap_name', 'ap_id', 'mobile', 'district', 'upazila', 'inspection_date', 'centre_name',
+   'overall_comment', 'civil_comment', 'elec_general_comment', 'elec_durable_comment',
+   'lightning_comment', 'solar_panel_brand', 'solar_inverter_brand', 'solar_comment',
+   'drive_civil', 'drive_elec', 'drive_solar', 'drive_warranty', 'issue_summary',
+   'elec_bill_detail', 'ap_remarks'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && data[id]) el.value = data[id];
+  });
+  setRadioByValue('visit_type', data.visit_type);
+  setRadioByValue('overall_status', data.overall_status);
+  setRadioByValue('usable', data.usable);
+  setRadioByValue('quality', data.quality);
+  setRadioByValue('recommendation', data.recommendation);
+  setRadioByValue('elec_bill', data.elec_bill);
+  setCheckboxesByValues('major_issues', data.major_issues);
+  restoreChecklistAnswers(data.civil, 'civil-items');
+  restoreChecklistAnswers(data.elecGeneral, 'elec-general-items');
+  restoreChecklistAnswers(data.elecDurable, 'elec-durable-items');
+  restoreChecklistAnswers(data.lightning, 'lightning-items');
+  restoreChecklistAnswers(data.solar, 'solar-items');
+  updateProgress();
+}
+function checkForSavedDraft() {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return;
+    const snap = JSON.parse(raw);
+    const when = new Date(snap.savedAt).toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' });
+    const box = document.getElementById('draftNotice');
+    box.style.display = 'flex';
+    box.querySelector('.draft-msg').textContent =
+      'আপনার আগের অসম্পূর্ণ ফরম এই ডিভাইসে পাওয়া গেছে (সর্বশেষ: ' + when + ')। পুনরুদ্ধার করবেন?';
+    document.getElementById('restoreDraftBtn').onclick = function () {
+      restoreFormSnapshot(snap.data);
+      box.style.display = 'none';
+    };
+    document.getElementById('discardDraftBtn').onclick = function () {
+      localStorage.removeItem(DRAFT_KEY);
+      box.style.display = 'none';
+    };
+  } catch (e) {
+    // corrupt or unavailable storage — ignore
+  }
+}
+checkForSavedDraft();
+
+function showSaveStatus(ok, message) {
+  const box = document.getElementById('saveStatus');
+  box.style.display = 'block';
+  box.className = ok ? 'ok' : 'err';
+  if (ok) {
+    const missing = getMissingRequired();
+    box.innerHTML = missing.length
+      ? '✅ <strong>আংশিক তথ্য সংরক্ষিত হয়েছে (Progress Save)।</strong> এখনো বাকি আছে: ' + missing.join(', ') + '। পরে ফিরে এসে বাকি অংশ পূরণ করে আবার Save করতে পারবেন।'
+      : '✅ <strong>তথ্য সম্পূর্ণভাবে সংরক্ষিত হয়েছে।</strong> আপনি চাইলে এখন Print করতে পারেন।';
+  } else {
+    box.innerHTML = '⚠️ <strong>সংরক্ষণ ব্যর্থ হয়েছে।</strong> তবে চিন্তার কারণ নেই — আপনার তথ্য এই ডিভাইসে স্থানীয়ভাবে সংরক্ষিত আছে। ইন্টারনেট সংযোগ পরীক্ষা করে আবার Save করুন। (' + (message || '') + ')';
+  }
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw4AIWUwnlbyRVdOyOn-sD0qBtKrTbKZxr0GvWJzFdLqIO4wRjf1OlozlW_VLjpEOo/exec';
+
+async function saveForm() {
+  // Local save always happens first and always succeeds, regardless of
+  // which fields are filled — this is what lets you save progress and
+  // continue later, even without finishing the mandatory fields.
+  autoSaveLocal();
+
+  const missing = getMissingRequired();
+  const completionStatus = missing.length ? 'অসম্পূর্ণ (Progress Save) — বাকি: ' + missing.join(', ') : 'সম্পূর্ণ';
+
+  const payload = {
+    'form-name': 'set-centre-inspection',
+    'bot-field': '',
+    submitted_at: new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' }),
+    completion_status: completionStatus,
+    ap_name: val('ap_name'),
+    ap_id: val('ap_id'),
+    mobile: val('mobile'),
+    district: val('district'),
+    upazila: val('upazila'),
+    inspection_date: val('inspection_date'),
+    centre_name: val('centre_name'),
+    visit_type: radioVal('visit_type'),
+    overall_status: radioVal('overall_status'),
+    usable: radioVal('usable'),
+    overall_comment: val('overall_comment'),
+    civil_comment: val('civil_comment'),
+    elec_general_comment: val('elec_general_comment'),
+    elec_durable_comment: val('elec_durable_comment'),
+    lightning_comment: val('lightning_comment'),
+    solar_panel_brand: val('solar_panel_brand'),
+    solar_inverter_brand: val('solar_inverter_brand'),
+    solar_comment: val('solar_comment'),
+    drive_civil: val('drive_civil'),
+    drive_elec: val('drive_elec'),
+    drive_solar: val('drive_solar'),
+    drive_warranty: val('drive_warranty'),
+    quality: radioVal('quality'),
+    major_issues: checkedList('major_issues'),
+    recommendation: radioVal('recommendation'),
+    issue_summary: val('issue_summary'),
+    elec_bill: radioVal('elec_bill'),
+    elec_bill_detail: val('elec_bill_detail'),
+    ap_remarks: val('ap_remarks'),
+    civil_checklist_json: JSON.stringify(collectChecklistAnswers(civilItems, 'civil-items')),
+    elec_general_checklist_json: JSON.stringify(collectChecklistAnswers(elecGeneralItems, 'elec-general-items')),
+    elec_durable_checklist_json: JSON.stringify(collectChecklistAnswers(elecDurableItems, 'elec-durable-items')),
+    lightning_checklist_json: JSON.stringify(collectChecklistAnswers(lightningItems, 'lightning-items')),
+    solar_checklist_json: JSON.stringify(collectChecklistAnswers(solarItems, 'solar-items'))
+  };
+
+  const btn = document.getElementById('saveBtn');
+  const originalLabel = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'সংরক্ষণ হচ্ছে…';
+  document.getElementById('saveStatus').style.display = 'none';
+
+  try {
+    if (window.location.protocol === 'file:') {
+      showSaveStatus(true);
+      return;
+    }
+
+    if (!GOOGLE_SHEETS_WEB_APP_URL.trim()) {
+      showSaveStatus(false, 'Google Apps Script URL is not configured yet.');
+      return;
+    }
+
+    await fetch(GOOGLE_SHEETS_WEB_APP_URL.trim(), {
+      method: 'POST',
+      mode: 'no-cors',
+      body: new URLSearchParams(payload).toString()
+    });
+    showSaveStatus(true);
+  } catch (err) {
+    showSaveStatus(false, err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalLabel;
+  }
+}
+
+</script>
+</body>
+</html>
