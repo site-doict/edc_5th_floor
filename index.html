@@ -1128,6 +1128,59 @@ function checkForSavedDraft() {
 }
 checkForSavedDraft();
 
+async function loadLatestSheetDraft() {
+  if (!GOOGLE_SHEETS_WEB_APP_URL.trim()) return;
+  if (localStorage.getItem(DRAFT_KEY)) return;
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      const callbackName = 'sheetLatest_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      const script = document.createElement('script');
+
+      window[callbackName] = function (payload) {
+        delete window[callbackName];
+        script.remove();
+        resolve(payload);
+      };
+
+      script.onerror = function () {
+        delete window[callbackName];
+        script.remove();
+        reject(new Error('Could not load sheet data'));
+      };
+
+      script.src = GOOGLE_SHEETS_WEB_APP_URL.trim() + '?action=latest&callback=' + callbackName + '&ts=' + Date.now();
+      document.head.appendChild(script);
+      setTimeout(() => {
+        if (window[callbackName]) {
+          delete window[callbackName];
+          script.remove();
+          reject(new Error('Timed out loading sheet data'));
+        }
+      }, 15000);
+    });
+    if (!data || !data.ok || !data.hasData || !data.row) return;
+
+    const box = document.getElementById('draftNotice');
+    box.style.display = 'flex';
+    box.querySelector('.draft-msg').textContent = 'সর্বশেষ Google Sheet data এই ডিভাইসে লোড করা হয়েছে। চাইলে এটি সম্পাদনা করে আবার Save করতে পারেন।';
+    document.getElementById('restoreDraftBtn').textContent = 'লোডেড ডেটা রেখে দিন';
+    document.getElementById('discardDraftBtn').textContent = 'ডেটা মুছে নতুন শুরু করুন';
+    document.getElementById('restoreDraftBtn').onclick = function () {
+      restoreFormSnapshot(data.row);
+      box.style.display = 'none';
+    };
+    document.getElementById('discardDraftBtn').onclick = function () {
+      box.style.display = 'none';
+    };
+
+    restoreFormSnapshot(data.row);
+  } catch (e) {
+    // ignore network or CORS failures and continue with a blank form
+  }
+}
+loadLatestSheetDraft();
+
 function showSaveStatus(ok, message) {
   const box = document.getElementById('saveStatus');
   box.style.display = 'block';
@@ -1135,8 +1188,8 @@ function showSaveStatus(ok, message) {
   if (ok) {
     const missing = getMissingRequired();
     box.innerHTML = missing.length
-      ? '✅ <strong>আংশিক তথ্য Google Sheet-এ সংরক্ষিত হয়েছে (Progress Save)।</strong> এখনো বাকি আছে: ' + missing.join(', ') + '। পরে ফিরে এসে বাকি অংশ পূরণ করে আবার Save করতে পারবেন।'
-      : '✅ <strong>তথ্য Google Sheet-এ সংরক্ষিত হয়েছে।</strong> আপনি চাইলে এখন Print করতে পারেন।';
+      ? '✅ <strong>আংশিক তথ্য সংরক্ষিত হয়েছে।</strong>'
+      : '✅ <strong>তথ্য সংরক্ষিত হয়েছে।</strong>';
   } else {
     box.innerHTML = '⚠️ <strong>সংরক্ষণ ব্যর্থ হয়েছে।</strong> তবে চিন্তার কারণ নেই — আপনার তথ্য এই ডিভাইসে স্থানীয়ভাবে সংরক্ষিত আছে। ইন্টারনেট সংযোগ পরীক্ষা করে আবার Save করুন। (' + (message || '') + ')';
   }
@@ -1224,8 +1277,8 @@ async function saveForm() {
       return;
     }
 
-    const frame = ensureSaveFrame();
-    await new Promise((resolve) => {
+    ensureSaveFrame();
+    await new Promise((resolve, reject) => {
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = GOOGLE_SHEETS_WEB_APP_URL.trim();
@@ -1240,18 +1293,32 @@ async function saveForm() {
         form.appendChild(input);
       });
 
-      let finished = false;
-      const finish = () => {
-        if (finished) return;
-        finished = true;
-        showSaveStatus(true);
-        resolve();
+      const saveFrameOriginMatches = (origin) =>
+        origin === 'https://script.google.com' || origin === 'https://script.googleusercontent.com';
+
+      const finish = (ok, message) => {
+        window.removeEventListener('message', onMessage);
+        clearTimeout(timerId);
+        form.remove();
+        if (ok) {
+          showSaveStatus(true);
+          resolve();
+        } else {
+          reject(new Error(message || 'Google Sheet save failed'));
+        }
       };
 
-      frame.onload = finish;
+      const onMessage = (event) => {
+        if (!saveFrameOriginMatches(event.origin)) return;
+        const data = event.data;
+        if (!data || data.source !== 'set-centre-inspection-save') return;
+        finish(!!data.ok, data.error || 'Google Sheet save failed');
+      };
+
+      window.addEventListener('message', onMessage);
+      const timerId = setTimeout(() => finish(false, 'No response from Google Sheets endpoint'), 15000);
       document.body.appendChild(form);
       form.submit();
-      setTimeout(finish, 4000);
     });
   } catch (err) {
     showSaveStatus(false, err.message);

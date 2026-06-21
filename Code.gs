@@ -42,25 +42,56 @@ const HEADERS = [
   'solar_checklist_json'
 ];
 
-function doGet() {
+function doGet(e) {
+  const action = e && e.parameter && e.parameter.action ? e.parameter.action : '';
+  const callback = e && e.parameter && e.parameter.callback ? e.parameter.callback : '';
+
+  if (action === 'latest') {
+    const payload = JSON.stringify(getLatestRow_());
+    if (callback) {
+      return ContentService
+        .createTextOutput(callback + '(' + payload + ');')
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+
+    return ContentService
+      .createTextOutput(payload)
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   return ContentService.createTextOutput('Google Sheets save endpoint is running.');
 }
 
 function doPost(e) {
-  const lock = LockService.getScriptLock();
-  lock.waitLock(10000);
-
+  let lock = null;
   try {
+    lock = LockService.getScriptLock();
+    lock.waitLock(10000);
+
     const sheet = getOrCreateSheet_();
     const values = HEADERS.map((header) => getValue_(e, header));
     values[0] = new Date().toISOString();
     sheet.appendRow(values);
 
-    return ContentService
-      .createTextOutput(JSON.stringify({ ok: true }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return HtmlService.createHtmlOutput(
+      '<!doctype html><html><body><script>' +
+      'window.parent.postMessage({source:"set-centre-inspection-save", ok:true}, "*");' +
+      'document.body.textContent="saved";' +
+      '</script></body></html>'
+    );
+  } catch (error) {
+    return HtmlService.createHtmlOutput(
+      '<!doctype html><html><body><script>' +
+      'window.parent.postMessage({source:"set-centre-inspection-save", ok:false, error:' + JSON.stringify(error && error.message ? error.message : String(error)) + '}, "*");' +
+      'document.body.textContent="failed";' +
+      '</script></body></html>'
+    );
   } finally {
-    lock.releaseLock();
+    try {
+      if (lock) lock.releaseLock();
+    } catch (e) {
+      // ignore release errors when lock acquisition failed
+    }
   }
 }
 
@@ -110,4 +141,22 @@ function getValue_(e, key) {
     return '';
   }
   return e.parameter[key];
+}
+
+function getLatestRow_() {
+  const sheet = getOrCreateSheet_();
+  const lastRow = sheet.getLastRow();
+
+  if (lastRow < 2) {
+    return { ok: true, hasData: false, row: null };
+  }
+
+  const values = sheet.getRange(lastRow, 1, 1, HEADERS.length).getValues()[0];
+  const row = {};
+
+  HEADERS.forEach((header, index) => {
+    row[header] = values[index] || '';
+  });
+
+  return { ok: true, hasData: true, row: row };
 }
