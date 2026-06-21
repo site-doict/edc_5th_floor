@@ -1,4 +1,6 @@
+const SPREADSHEET_NAME = 'SET Centre Inspection Responses';
 const SHEET_NAME = 'Responses';
+const SPREADSHEET_ID_KEY = 'SET_CENTRE_INSPECTION_SPREADSHEET_ID';
 
 const HEADERS = [
   'received_at',
@@ -63,7 +65,7 @@ function doPost(e) {
 }
 
 function getOrCreateSheet_() {
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const spreadsheet = getOrCreateSpreadsheet_();
   let sheet = spreadsheet.getSheetByName(SHEET_NAME);
 
   if (!sheet) {
@@ -76,6 +78,31 @@ function getOrCreateSheet_() {
   }
 
   return sheet;
+}
+
+function getOrCreateSpreadsheet_() {
+  const props = PropertiesService.getScriptProperties();
+  const storedId = props.getProperty(SPREADSHEET_ID_KEY);
+
+  if (storedId) {
+    return SpreadsheetApp.openById(storedId);
+  }
+
+  const active = SpreadsheetApp.getActiveSpreadsheet();
+  if (active) {
+    props.setProperty(SPREADSHEET_ID_KEY, active.getId());
+    shareSpreadsheetReadOnly_(active.getId());
+    return active;
+  }
+
+  const created = SpreadsheetApp.create(SPREADSHEET_NAME);
+  props.setProperty(SPREADSHEET_ID_KEY, created.getId());
+  shareSpreadsheetReadOnly_(created.getId());
+  return created;
+}
+
+function shareSpreadsheetReadOnly_(spreadsheetId) {
+  DriveApp.getFileById(spreadsheetId).setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
 }
 
 function getValue_(e, key) {

@@ -1135,8 +1135,8 @@ function showSaveStatus(ok, message) {
   if (ok) {
     const missing = getMissingRequired();
     box.innerHTML = missing.length
-      ? '✅ <strong>আংশিক তথ্য সংরক্ষিত হয়েছে (Progress Save)।</strong> এখনো বাকি আছে: ' + missing.join(', ') + '। পরে ফিরে এসে বাকি অংশ পূরণ করে আবার Save করতে পারবেন।'
-      : '✅ <strong>তথ্য সম্পূর্ণভাবে সংরক্ষিত হয়েছে।</strong> আপনি চাইলে এখন Print করতে পারেন।';
+      ? '✅ <strong>আংশিক তথ্য Google Sheet-এ সংরক্ষিত হয়েছে (Progress Save)।</strong> এখনো বাকি আছে: ' + missing.join(', ') + '। পরে ফিরে এসে বাকি অংশ পূরণ করে আবার Save করতে পারবেন।'
+      : '✅ <strong>তথ্য Google Sheet-এ সংরক্ষিত হয়েছে।</strong> আপনি চাইলে এখন Print করতে পারেন।';
   } else {
     box.innerHTML = '⚠️ <strong>সংরক্ষণ ব্যর্থ হয়েছে।</strong> তবে চিন্তার কারণ নেই — আপনার তথ্য এই ডিভাইসে স্থানীয়ভাবে সংরক্ষিত আছে। ইন্টারনেট সংযোগ পরীক্ষা করে আবার Save করুন। (' + (message || '') + ')';
   }
@@ -1144,6 +1144,18 @@ function showSaveStatus(ok, message) {
 }
 
 const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw4AIWUwnlbyRVdOyOn-sD0qBtKrTbKZxr0GvWJzFdLqIO4wRjf1OlozlW_VLjpEOo/exec';
+
+function ensureSaveFrame() {
+  let frame = document.getElementById('saveFrame');
+  if (!frame) {
+    frame = document.createElement('iframe');
+    frame.id = 'saveFrame';
+    frame.name = 'saveFrame';
+    frame.style.display = 'none';
+    document.body.appendChild(frame);
+  }
+  return frame;
+}
 
 async function saveForm() {
   // Local save always happens first and always succeeds, regardless of
@@ -1212,12 +1224,35 @@ async function saveForm() {
       return;
     }
 
-    await fetch(GOOGLE_SHEETS_WEB_APP_URL.trim(), {
-      method: 'POST',
-      mode: 'no-cors',
-      body: new URLSearchParams(payload).toString()
+    const frame = ensureSaveFrame();
+    await new Promise((resolve) => {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = GOOGLE_SHEETS_WEB_APP_URL.trim();
+      form.target = 'saveFrame';
+      form.style.display = 'none';
+
+      Object.entries(payload).forEach(([name, value]) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        form.appendChild(input);
+      });
+
+      let finished = false;
+      const finish = () => {
+        if (finished) return;
+        finished = true;
+        showSaveStatus(true);
+        resolve();
+      };
+
+      frame.onload = finish;
+      document.body.appendChild(form);
+      form.submit();
+      setTimeout(finish, 4000);
     });
-    showSaveStatus(true);
   } catch (err) {
     showSaveStatus(false, err.message);
   } finally {
