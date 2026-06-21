@@ -778,6 +778,7 @@
   </div>
   <div id="saveStatus" style="display:none;"></div>
   <button class="btn-save" id="saveBtn" onclick="saveForm()">💾 Save / সংরক্ষণ করুন</button>
+  <button class="btn-reset" type="button" onclick="refreshFromSheet()">🔄 Load latest from Sheet</button>
   <button class="btn-print" onclick="window.print()">🖨️ Print / PDF সংরক্ষণ</button>
   <button class="btn-reset" onclick="if(confirm('সকল তথ্য মুছে ফেলবেন? (ডিভাইসে সংরক্ষিত Draft-ও মুছে যাবে)')) { localStorage.removeItem('setCentreInspectionDraft_v1'); location.reload(); }">রিসেট</button>
 </div>
@@ -1141,9 +1142,9 @@ function checkForSavedDraft() {
 }
 checkForSavedDraft();
 
-async function loadLatestSheetDraft() {
+async function loadLatestSheetDraft(force = false) {
   if (!GOOGLE_SHEETS_WEB_APP_URL.trim()) return;
-  if (localStorage.getItem(DRAFT_KEY)) return;
+  if (!force && localStorage.getItem(DRAFT_KEY)) return;
 
   try {
     const data = await new Promise((resolve, reject) => {
@@ -1192,6 +1193,7 @@ async function loadLatestSheetDraft() {
     };
 
     restoreFormSnapshot(data.row);
+    return data;
   } catch (e) {
     const box = document.getElementById('saveStatus');
     if (box && !box.innerHTML) {
@@ -1201,6 +1203,30 @@ async function loadLatestSheetDraft() {
     }
   }
 }
+
+async function refreshFromSheet() {
+  if (!GOOGLE_SHEETS_WEB_APP_URL.trim()) {
+    showSaveStatus(false, 'Google Apps Script URL is not configured yet.');
+    return;
+  }
+
+  if (localStorage.getItem(DRAFT_KEY) && !confirm('এখানে local draft আছে। Google Sheet-এর সর্বশেষ ডেটা লোড করলে এই ডিভাইসের draft-এর উপর ওভাররাইট হবে। চালিয়ে যাবেন?')) {
+    return;
+  }
+
+  try {
+    const data = await loadLatestSheetDraft(true);
+    if (!data || !data.ok || !data.hasData || !data.row) {
+      showSaveStatus(false, 'Google Sheet-এ কোনো data পাওয়া যায়নি।');
+      return;
+    }
+
+    showSaveStatus(true);
+  } catch (e) {
+    showSaveStatus(false, e.message || 'Google Sheets data load failed');
+  }
+}
+
 loadLatestSheetDraft();
 
 function showSaveStatus(ok, message) {
