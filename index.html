@@ -1119,6 +1119,9 @@ function checkForSavedDraft() {
       localStorage.removeItem(DRAFT_KEY);
       box.style.display = 'none';
     };
+
+    // Restore immediately so refresh brings the draft back without requiring a click.
+    restoreFormSnapshot(snap.data);
   } catch (e) {
     // corrupt or unavailable storage — ignore
   }
