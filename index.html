@@ -1079,6 +1079,19 @@ function restoreChecklistAnswers(saved, containerId) {
 }
 function restoreFormSnapshot(data) {
   if (!data) return;
+  const majorIssues = Array.isArray(data.major_issues)
+    ? data.major_issues
+    : String(data.major_issues || '').split(',').map(s => s.trim()).filter(Boolean);
+
+  const parseChecklist = (value) => {
+    if (!value) return null;
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string') {
+      try { return JSON.parse(value); } catch (e) { return null; }
+    }
+    return null;
+  };
+
   ['ap_name', 'ap_id', 'mobile', 'district', 'upazila', 'inspection_date', 'centre_name',
    'overall_comment', 'civil_comment', 'elec_general_comment', 'elec_durable_comment',
    'lightning_comment', 'solar_panel_brand', 'solar_inverter_brand', 'solar_comment',
@@ -1093,12 +1106,12 @@ function restoreFormSnapshot(data) {
   setRadioByValue('quality', data.quality);
   setRadioByValue('recommendation', data.recommendation);
   setRadioByValue('elec_bill', data.elec_bill);
-  setCheckboxesByValues('major_issues', data.major_issues);
-  restoreChecklistAnswers(data.civil, 'civil-items');
-  restoreChecklistAnswers(data.elecGeneral, 'elec-general-items');
-  restoreChecklistAnswers(data.elecDurable, 'elec-durable-items');
-  restoreChecklistAnswers(data.lightning, 'lightning-items');
-  restoreChecklistAnswers(data.solar, 'solar-items');
+  setCheckboxesByValues('major_issues', majorIssues);
+  restoreChecklistAnswers(parseChecklist(data.civil), 'civil-items');
+  restoreChecklistAnswers(parseChecklist(data.elecGeneral), 'elec-general-items');
+  restoreChecklistAnswers(parseChecklist(data.elecDurable), 'elec-durable-items');
+  restoreChecklistAnswers(parseChecklist(data.lightning), 'lightning-items');
+  restoreChecklistAnswers(parseChecklist(data.solar), 'solar-items');
   updateProgress();
 }
 function checkForSavedDraft() {
@@ -1134,29 +1147,33 @@ async function loadLatestSheetDraft() {
 
   try {
     const data = await new Promise((resolve, reject) => {
-      const callbackName = 'sheetLatest_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-      const script = document.createElement('script');
+      const loadFrameId = 'loadFrame';
+      let frame = document.getElementById(loadFrameId);
+      if (!frame) {
+        frame = document.createElement('iframe');
+        frame.id = loadFrameId;
+        frame.name = loadFrameId;
+        frame.style.display = 'none';
+        document.body.appendChild(frame);
+      }
 
-      window[callbackName] = function (payload) {
-        delete window[callbackName];
-        script.remove();
-        resolve(payload);
+      const onMessage = (event) => {
+        if (!event || !event.data || event.data.source !== 'set-centre-inspection-load') return;
+        window.removeEventListener('message', onMessage);
+        clearTimeout(timerId);
+        frame.onload = null;
+        resolve(event.data.data);
       };
 
-      script.onerror = function () {
-        delete window[callbackName];
-        script.remove();
-        reject(new Error('Could not load sheet data'));
+      window.addEventListener('message', onMessage);
+      frame.onload = function () {
+        // no-op; the real data comes through postMessage from Apps Script
       };
 
-      script.src = GOOGLE_SHEETS_WEB_APP_URL.trim() + '?action=latest&callback=' + callbackName + '&ts=' + Date.now();
-      document.head.appendChild(script);
-      setTimeout(() => {
-        if (window[callbackName]) {
-          delete window[callbackName];
-          script.remove();
-          reject(new Error('Timed out loading sheet data'));
-        }
+      frame.src = GOOGLE_SHEETS_WEB_APP_URL.trim() + '?action=latest&ts=' + Date.now();
+      const timerId = setTimeout(() => {
+        window.removeEventListener('message', onMessage);
+        reject(new Error('Timed out loading sheet data'));
       }, 15000);
     });
     if (!data || !data.ok || !data.hasData || !data.row) return;

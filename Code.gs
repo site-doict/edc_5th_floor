@@ -44,19 +44,15 @@ const HEADERS = [
 
 function doGet(e) {
   const action = e && e.parameter && e.parameter.action ? e.parameter.action : '';
-  const callback = e && e.parameter && e.parameter.callback ? e.parameter.callback : '';
 
   if (action === 'latest') {
     const payload = JSON.stringify(getLatestRow_());
-    if (callback) {
-      return ContentService
-        .createTextOutput(callback + '(' + payload + ');')
-        .setMimeType(ContentService.MimeType.JAVASCRIPT);
-    }
-
-    return ContentService
-      .createTextOutput(payload)
-      .setMimeType(ContentService.MimeType.JSON);
+    return HtmlService.createHtmlOutput(
+      '<!doctype html><html><body><script>' +
+      'window.parent.postMessage({source:"set-centre-inspection-load", data:' + payload + '}, "*");' +
+      'document.body.textContent="loaded";' +
+      '</script></body></html>'
+    );
   }
 
   return ContentService.createTextOutput('Google Sheets save endpoint is running.');
